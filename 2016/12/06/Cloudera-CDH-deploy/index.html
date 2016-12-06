@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://musicwood.github.io">
+  <title>Cloudera CDH 部署实践 | 听音乐的木头</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.准备1.1.系统和软件版本要求
+CentOS 7 x86_64
+Cloudera Manager 5.8.2
+CDH 5.8.2, Parcel
+Python 2.7
+
+1.2.集群设备列表
+
+
+IP
+角色
+主机名
+
+
+
+
+192.168.8.125
+CDH本地仓库, Cloudera Manager Server
+cdh.server
+
+
+192.168.8.241
+Cloudera Man">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cloudera CDH 部署实践">
+<meta property="og:url" content="http://musicwood.github.io/2016/12/06/Cloudera-CDH-deploy/index.html">
+<meta property="og:site_name" content="听音乐的木头">
+<meta property="og:description" content="1.准备1.1.系统和软件版本要求
+CentOS 7 x86_64
+Cloudera Manager 5.8.2
+CDH 5.8.2, Parcel
+Python 2.7
+
+1.2.集群设备列表
+
+
+IP
+角色
+主机名
+
+
+
+
+192.168.8.125
+CDH本地仓库, Cloudera Manager Server
+cdh.server
+
+
+192.168.8.241
+Cloudera Man">
+<meta property="og:updated_time" content="2016-12-06T09:27:18.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cloudera CDH 部署实践">
+<meta name="twitter:description" content="1.准备1.1.系统和软件版本要求
+CentOS 7 x86_64
+Cloudera Manager 5.8.2
+CDH 5.8.2, Parcel
+Python 2.7
+
+1.2.集群设备列表
+
+
+IP
+角色
+主机名
+
+
+
+
+192.168.8.125
+CDH本地仓库, Cloudera Manager Server
+cdh.server
+
+
+192.168.8.241
+Cloudera Man">
+  
+    <link rel="alternative" href="/atom.xml" title="听音乐的木头" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css?v=4.0.0.css">
+  
+
+</head>
+
+<body>
+  <div id="container" q-class="show:isCtnShow">
+    <canvas id="anm-canvas" class="anm-canvas"></canvas>
+    <div class="left-col" q-class="show:isShow">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="https://avatars3.githubusercontent.com/u/3955713?v=3&amp;s=460" class="js-avatar">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">musicwood</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a data-idx="0" q-on="click: openSlider(e, 'innerArchive')" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a data-idx="1" q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a data-idx="2" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/musicwood" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col" q-class="show:isShow,hide:isShow|isFalse">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">musicwood</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="https://avatars3.githubusercontent.com/u/3955713?v=3&amp;s=460" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">musicwood</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+		        
+		        	<li><a href="/archives">所有文章</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/musicwood" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div id="wrapper" class="body-wrap">
+        <div class="menu-l">
+          <div class="canvas-wrap">
+            <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
+          </div>
+          <div id="js-content" class="content-ll">
+            <article id="post-Cloudera-CDH-deploy" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cloudera CDH 部署实践
+    </h1>
+  
+
+        <a href="/2016/12/06/Cloudera-CDH-deploy/" class="archive-article-date">
+  	<time datetime="2016-12-06T02:21:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-06</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-准备"><a href="#1-准备" class="headerlink" title="1.准备"></a>1.准备</h2><h3 id="1-1-系统和软件版本要求"><a href="#1-1-系统和软件版本要求" class="headerlink" title="1.1.系统和软件版本要求"></a>1.1.系统和软件版本要求</h3><ul>
+<li>CentOS 7 x86_64</li>
+<li>Cloudera Manager 5.8.2</li>
+<li>CDH 5.8.2, Parcel</li>
+<li>Python 2.7</li>
+</ul>
+<h3 id="1-2-集群设备列表"><a href="#1-2-集群设备列表" class="headerlink" title="1.2.集群设备列表"></a>1.2.集群设备列表</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">IP</th>
+<th style="text-align:left">角色</th>
+<th style="text-align:left">主机名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">192.168.8.125</td>
+<td style="text-align:left">CDH本地仓库, Cloudera Manager Server</td>
+<td style="text-align:left">cdh.server</td>
+</tr>
+<tr>
+<td style="text-align:left">192.168.8.241</td>
+<td style="text-align:left">Cloudera Manager Agent, cluster-master</td>
+<td style="text-align:left">cdh241.kbw</td>
+</tr>
+<tr>
+<td style="text-align:left">192.168.8.242</td>
+<td style="text-align:left">Cloudera Manager Agent, cluster-slave</td>
+<td style="text-align:left">cdh242.kbw</td>
+</tr>
+<tr>
+<td style="text-align:left">192.168.8.243</td>
+<td style="text-align:left">Cloudera Manager Agent, cluster-slave</td>
+<td style="text-align:left">cdh243.kbw</td>
+</tr>
+<tr>
+<td style="text-align:left">192.168.8.244</td>
+<td style="text-align:left">Cloudera Manager Agent, cluster-slave</td>
+<td style="text-align:left">cdh244.kbw</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-3-服务器初始化"><a href="#1-3-服务器初始化" class="headerlink" title="1.3.服务器初始化"></a>1.3.服务器初始化</h3><h4 id="1-3-1-修改主机名-root-all"><a href="#1-3-1-修改主机名-root-all" class="headerlink" title="1.3.1.修改主机名(root@all)"></a>1.3.1.修改主机名(root@all)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># cdh241.kbw 是主机名，ip与主机名对应关系见1.2</div><div class="line">hostnamectl set-hostname &lt;主机名&gt;</div></pre></td></tr></table></figure>
+<h4 id="1-3-2-修改-etc-hosts文件-root-all"><a href="#1-3-2-修改-etc-hosts文件-root-all" class="headerlink" title="1.3.2.修改/etc/hosts文件(root@all)"></a>1.3.2.修改<code>/etc/hosts</code>文件(root@all)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cat &lt;&lt; EOF &gt;&gt; /etc/hosts</div><div class="line">192.168.8.125 cdh.server</div><div class="line">192.168.8.241 cdh241.kbw</div><div class="line">192.168.8.242 cdh242.kbw</div><div class="line">192.168.8.243 cdh243.kbw</div><div class="line">192.168.8.244 cdh244.kbw</div><div class="line">EOF</div></pre></td></tr></table></figure>
+<h4 id="1-3-3-关闭SELinux-root-all"><a href="#1-3-3-关闭SELinux-root-all" class="headerlink" title="1.3.3.关闭SELinux(root@all)"></a>1.3.3.关闭SELinux(root@all)</h4><p>修改<code>/etc/selinux/config</code>文件,将<code>SELINUX=enforcing</code>改为<code>SELINUX=disabled</code>,重启机器(reboot)即可.</p>
+<h4 id="1-3-4-配置SSH免用户密码登录-root-cdh-server"><a href="#1-3-4-配置SSH免用户密码登录-root-cdh-server" class="headerlink" title="1.3.4.配置SSH免用户密码登录(root@cdh.server)"></a>1.3.4.配置SSH免用户密码登录(root@cdh.server)</h4><p>生成密钥对<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 密码设置后后续会用到</div><div class="line">ssh-keygen -f ~/.ssh/id_rsa -P &lt;密码&gt;</div></pre></td></tr></table></figure></p>
+<p>生成的文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@cdh241 ~]# tree ~/.ssh/</div><div class="line">/root/.ssh/</div><div class="line">├── authorized_keys</div><div class="line">├── id_rsa</div><div class="line">└── id_rsa.pub</div><div class="line"></div><div class="line">0 directories, 3 files</div></pre></td></tr></table></figure></p>
+<p>将生成的公钥（id_rsa.pub）追加到所有服务器root用户的~/.ssh/authorized_keys文件后面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 主机名列表见1.2，该操作需要对应服务器的root用户密码</div><div class="line">ssh-copy-id root@&lt;主机名&gt;</div></pre></td></tr></table></figure></p>
+<p>测试是否能免用户密码登录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 主机名列表见1.2，该操作需要生成密钥对时指定的密码</div><div class="line">ssh root@&lt;主机名&gt;</div></pre></td></tr></table></figure></p>
+<p>见到如下提示则成功配置免用户密码登录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Enter passphrase for key &apos;/root/.ssh/id_rsa&apos;: </div><div class="line">Last login: Wed Oct 12 15:37:53 2016 from cdh241.kbw</div></pre></td></tr></table></figure></p>
+<h4 id="1-3-5-开启ntp服务以同步时间-root-all"><a href="#1-3-5-开启ntp服务以同步时间-root-all" class="headerlink" title="1.3.5.开启ntp服务以同步时间(root@all)"></a>1.3.5.开启ntp服务以同步时间(root@all)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo yum install ntp ntpdate -y</div><div class="line">sudo systemctl is-enabled ntpd</div><div class="line">sudo systemctl enable ntpd</div><div class="line">sudo systemctl start ntpd</div></pre></td></tr></table></figure>
+<h2 id="2-搭建CDH本地仓库-someone-cdh-server"><a href="#2-搭建CDH本地仓库-someone-cdh-server" class="headerlink" title="2.搭建CDH本地仓库(someone@cdh.server)"></a>2.搭建CDH本地仓库(someone@cdh.server)</h2><h3 id="2-1-下载仓库文件压缩包和Parcel包"><a href="#2-1-下载仓库文件压缩包和Parcel包" class="headerlink" title="2.1.下载仓库文件压缩包和Parcel包"></a>2.1.下载仓库文件压缩包和Parcel包</h3><p>仓库：<br>请到<a href="http://archive.cloudera.com/cm5/repo-as-tarball/" target="_blank" rel="external">该页面</a>选择合适的版本下载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://archive.cloudera.com/cm5/repo-as-tarball/5.8.2/cm5.8.2-centos7.tar.gz</div></pre></td></tr></table></figure></p>
+<p>Parcel:<br>请到<a href="http://archive.cloudera.com/cdh5/parcels/" target="_blank" rel="external">该页面</a>选择合适的版本下载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://archive.cloudera.com/cdh5/parcels/5.8.2/CDH-5.8.2-1.cdh5.8.2.p0.3-el7.parcel</div></pre></td></tr></table></figure></p>
+<p>PS: wget下载较慢，可在windows下面使用下载工具下载，下载完成后需要校验md5，确认文件是官方原始文件。</p>
+<h3 id="2-2-搭建静态文件服务器"><a href="#2-2-搭建静态文件服务器" class="headerlink" title="2.2.搭建静态文件服务器"></a>2.2.搭建静态文件服务器</h3><p>安装依赖库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y pcre-devel bzip2-devel zlib-devel lrzsz wget</div><div class="line">sudo yum groupinstall -y &quot;Development Tools&quot;</div></pre></td></tr></table></figure></p>
+<p>选用nginx作为静态文件服务器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 当前目录为/home/wood, --prefix的值请对应修改</div><div class="line">wget https://nginx.org/download/nginx-1.11.4.tar.gz \</div><div class="line">&amp;&amp; tar zxvf nginx-1.11.4.tar.gz \</div><div class="line">&amp;&amp; cd nginx-1.11.4 \</div><div class="line">&amp;&amp; ./configure --prefix=/home/wood/nginx</div></pre></td></tr></table></figure></p>
+<p>编译安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
+<p>修改配置nginx配置文件，配置文件路径为<code>/home/wood/nginx/conf/nginx.conf</code>, 以下是修改完成后新旧文件内容的对比。</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">wood➜~/nginx/conf» diff -u nginx.conf.default nginx.conf    </div><div class="line"><span class="comment">--- nginx.conf.default  2016-10-12 16:14:36.897081256 +0800</span></div><div class="line"><span class="comment">+++ nginx.conf  2016-10-12 16:21:28.511996732 +0800</span></div><div class="line"><span class="meta">@@ -33,7 +33,7 @@</span></div><div class="line">     #gzip  on;</div><div class="line"> </div><div class="line">     server &#123;</div><div class="line"><span class="deletion">-        listen       80;</span></div><div class="line"><span class="addition">+        listen       8090;</span></div><div class="line">         server_name  localhost;</div><div class="line"> </div><div class="line">         #charset koi8-r;</div><div class="line"><span class="meta">@@ -43,6 +43,8 @@</span></div><div class="line">         location / &#123;</div><div class="line">             root   html;</div><div class="line">             index  index.html index.htm;</div><div class="line"><span class="addition">+            autoindex on;</span></div><div class="line"><span class="addition">+            limit_rate 3m;</span></div><div class="line">         &#125;</div><div class="line"> </div><div class="line">         #error_page  404              /404.html;</div></pre></td></tr></table></figure>
+<p>启动nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/wood/nginx/sbin/nginx</div></pre></td></tr></table></figure>
+<h3 id="2-3-搭建cloudera-manager本地仓库"><a href="#2-3-搭建cloudera-manager本地仓库" class="headerlink" title="2.3.搭建cloudera-manager本地仓库"></a>2.3.搭建cloudera-manager本地仓库</h3><p>安装依赖程序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum -y install createrepo</div></pre></td></tr></table></figure></p>
+<p>进入nginx默认的root目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd /home/wood/nginx/html</div></pre></td></tr></table></figure></p>
+<p>使用rz命令将下载好的`cm5.8.2-centos7.tar.gz上传到当前目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 解压</div><div class="line">tar zxf cm5.8.2-centos7.tar.gz</div></pre></td></tr></table></figure>
+<p>生成repodata<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd /home/wood/nginx/html/cm/5 &amp;&amp; rm -rf repodata</div><div class="line">createrepo .</div></pre></td></tr></table></figure></p>
+<p>测试访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://cdh.server:8090/cm/5/repodata/repomd.xml</div></pre></td></tr></table></figure></p>
+<p>结果如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">repomd</span> <span class="attr">xmlns</span>=<span class="string">"http://linux.duke.edu/metadata/repo"</span> <span class="attr">xmlns:rpm</span>=<span class="string">"http://linux.duke.edu/metadata/rpm"</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">revision</span>&gt;</span>1476671787<span class="tag">&lt;/<span class="name">revision</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"filelists"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>7c0594eee7c83fe84411be849b50333b9ced8b5acc6fabd2c3531b6905aedd9e<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>b065566fc58d1a21b934704249fd331a0de205809a92a0e27483c4296584e12a<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/7c0594eee7c83fe84411be849b50333b9ced8b5acc6fabd2c3531b6905aedd9e-filelists.xml.gz"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671790<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>118534<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>1840692<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"primary"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>81f97c54a02b6f9e98262a7d3762cb1d22561c891205c02cc831de882f849c2f<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>45ad1f65d93b735a8b19fba4e09f3259566b5a2b5cde9bf11337ca7fb059860c<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/81f97c54a02b6f9e98262a7d3762cb1d22561c891205c02cc831de882f849c2f-primary.xml.gz"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671790<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>4192<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>25756<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"primary_db"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>3628c6bbd4609873ec449834d4c686151971744ecc4ce15a757db51202d784eb<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>7706b44b6136bdd38e78fdbef4e3129b06f6d0034c354354f95f2c93a8803db7<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/3628c6bbd4609873ec449834d4c686151971744ecc4ce15a757db51202d784eb-primary.sqlite.bz2"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671792<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">database_version</span>&gt;</span>10<span class="tag">&lt;/<span class="name">database_version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>11260<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>58368<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"other_db"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>6991f7f10f2d94e9aae27f671dadaae8c632fb0d9c85577e545df02a0cf49baf<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>77eaab4e90163d6c1121357d0655d73547a33a770ecb07c1450fda55c4027109<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/6991f7f10f2d94e9aae27f671dadaae8c632fb0d9c85577e545df02a0cf49baf-other.sqlite.bz2"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671790<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">database_version</span>&gt;</span>10<span class="tag">&lt;/<span class="name">database_version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>1068<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>6144<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"other"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>5fe2db0dc10ee44d6e9d0c76174c158e4dfddd9bd9b0a654bb373c679e7c8af5<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>3378327d9a7c9d21b9c6d968e8c2cd45c308967d5c63608008604819d48385ed<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/5fe2db0dc10ee44d6e9d0c76174c158e4dfddd9bd9b0a654bb373c679e7c8af5-other.xml.gz"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671790<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>598<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>1466<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">data</span> <span class="attr">type</span>=<span class="string">"filelists_db"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>144231f2fa2fdf958fe6af83266883c96ddaf8b407d9e69dd0d63da8cb749054<span class="tag">&lt;/<span class="name">checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-checksum</span> <span class="attr">type</span>=<span class="string">"sha256"</span>&gt;</span>6be40181133a0948a69ba75d4c145f948e6547f21f13c132b1321a1b6cd29693<span class="tag">&lt;/<span class="name">open-checksum</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">location</span> <span class="attr">href</span>=<span class="string">"repodata/144231f2fa2fdf958fe6af83266883c96ddaf8b407d9e69dd0d63da8cb749054-filelists.sqlite.bz2"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span>1476671791<span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">database_version</span>&gt;</span>10<span class="tag">&lt;/<span class="name">database_version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">size</span>&gt;</span>118670<span class="tag">&lt;/<span class="name">size</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">open-size</span>&gt;</span>735232<span class="tag">&lt;/<span class="name">open-size</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">data</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">repomd</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="2-4-搭建parcel仓库"><a href="#2-4-搭建parcel仓库" class="headerlink" title="2.4.搭建parcel仓库"></a>2.4.搭建parcel仓库</h3><p>进入nginx默认的root目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd /home/wood/nginx/html</div></pre></td></tr></table></figure></p>
+<p>创建parcel目录并进入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir parcel &amp;&amp; cd parcel</div></pre></td></tr></table></figure></p>
+<p>使用rz命令上传<code>CDH-5.8.2-1.cdh5.8.2.p0.3-el7.parcel</code>文件到当前目录</p>
+<p>下载对应版本的manifest.json<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://archive.cloudera.com/cdh5/parcels/5.8.2/manifest.json</div></pre></td></tr></table></figure></p>
+<h2 id="3-安装Cloudera-Manager-someone-cdh-server"><a href="#3-安装Cloudera-Manager-someone-cdh-server" class="headerlink" title="3.安装Cloudera Manager(someone@cdh.server)"></a>3.安装Cloudera Manager(someone@cdh.server)</h2><h3 id="3-1-编写repo文件"><a href="#3-1-编写repo文件" class="headerlink" title="3.1.编写repo文件"></a>3.1.编写repo文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cat &lt;&lt; EOF &gt; cloudera-manager.repo</div><div class="line">[cloudera-manager]</div><div class="line">name = Cloudera Manager, Version 5.8.2</div><div class="line">baseurl = http://192.168.8.125:8090/cm/5/</div><div class="line">gpgkey = http://192.168.8.125:8090/cm/RPM-GPG-KEY-cloudera</div><div class="line">gpgcheck = 1</div><div class="line">EOF</div></pre></td></tr></table></figure>
+<h3 id="3-2-使用repo文件"><a href="#3-2-使用repo文件" class="headerlink" title="3.2.使用repo文件"></a>3.2.使用repo文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo cp cloudera-manager.repo /etc/yum.repos.d</div><div class="line">sudo yum makecache</div></pre></td></tr></table></figure>
+<h3 id="3-3-下载自动安装程序"><a href="#3-3-下载自动安装程序" class="headerlink" title="3.3.下载自动安装程序"></a>3.3.下载自动安装程序</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin</div></pre></td></tr></table></figure>
+<h3 id="3-4-赋予安装程序可执行权限"><a href="#3-4-赋予安装程序可执行权限" class="headerlink" title="3.4.赋予安装程序可执行权限"></a>3.4.赋予安装程序可执行权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod u+x cloudera-manager-installer.bin</div></pre></td></tr></table></figure>
+<h3 id="3-5-安装"><a href="#3-5-安装" class="headerlink" title="3.5.安装"></a>3.5.安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ./cloudera-manager-installer.bin --skip_repo_package=1</div></pre></td></tr></table></figure>
+<h3 id="3-6-登录管理页面"><a href="#3-6-登录管理页面" class="headerlink" title="3.6.登录管理页面"></a>3.6.登录管理页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http://cdh.server:7180/</div><div class="line"></div><div class="line">用户名：admin</div><div class="line">密码：admin</div></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cloudera-CDH/">Cloudera CDH</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/">Hadoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark/">Spark</a></li></ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://musicwood.github.io/2016/12/06/Cloudera-CDH-deploy/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Cloudera-CDH-deploy" data-title="Cloudera CDH 部署实践" data-url="http://musicwood.github.io/2016/12/06/Cloudera-CDH-deploy/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"musicwood"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 musicwood
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: false,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js?v=4.0.0.js"></script>
+
+
+    
+<div class="tools-col" q-class="show:isShow,hide:isShow|isFalse" q-on="click:stop(e)">
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all" q-show="innerArchive">
+        <div class="search-wrap">
+          <input class="search-ipt" q-model="search" type="text" placeholder="find something…">
+          <i class="icon-search icon" q-show="search|isEmptyStr"></i>
+          <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
+        </div>
+        <div class="widget tagcloud search-tag">
+          <p class="search-tag-wording">tag:</p>
+          <label class="search-switch">
+            <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
+          </label>
+          <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">Cloudera CDH</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">Hadoop</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">Spark</a>
+              </li>
+            
+            <div class="clearfix"></div>
+          </ul>
+        </div>
+        <ul class="search-ul">
+          <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
+            缺失模块。<br/>1、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
+            2、在根目录_config.yml里添加配置：
+<pre style="font-size: 12px;" q-show="jsonFail">
+  jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: true
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
+</pre>
+          </p>
+          <li class="search-li" q-repeat="items" q-show="isShow">
+            <a q-attr="href:path|urlformat" class="search-title"><i class="icon-quo-left icon"></i><span q-text="title"></span></a>
+            <p class="search-time">
+              <i class="icon-calendar icon"></i>
+              <span q-text="date|dateformat"></span>
+            </p>
+            <p class="search-tag">
+              <i class="icon-price-tags icon"></i>
+              <span q-repeat="tags" q-on="click:choseTag(e, name)" q-text="name|tagformat"></span>
+            </p>
+          </li>
+        </ul>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends" q-show="friends">
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me" q-show="aboutme">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">413431835@qq.com</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
